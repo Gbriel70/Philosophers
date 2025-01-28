@@ -6,8 +6,6 @@ int main(int ac, char **av)
 	t_philo *philos;
 	int data_init_return;
 
-	(void)philos;
-
 	if (!valid_arguments(ac, av))
 		return (print_error("Invalid arguments"));
 	data_init_return = init_data(ac, av, &data);
