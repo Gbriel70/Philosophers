@@ -114,6 +114,6 @@ void ft_usleep(int usec_sleep_time);
 // HANDLE ERRORS
 void destroy_mutexes(t_mutex *mutex, int nbr_philo, int stage);
 short stop_simulation(t_philo *philo, int stop);
-
+short simulation_should_stop(t_data *data);
 
 #endif

@@ -37,7 +37,7 @@ $(NAME): $(OBJ) $(INC)
 
 #=================================LEAK========================================#
 
-ARGS = 4 410 200 200 200
+ARGS=" "
 
 leak:
 	@echo "ARG1=number_of_philosophers"
@@ -66,6 +66,15 @@ gdb:
 	gdb --tui --args ./$(NAME) $(ARGS)
 
 #=================================RULES=======================================#
+
+run:
+	@echo "$(YELLOW)ARG1=number_of_philosophers"
+	@echo "ARG2=time_to_die"
+	@echo "ARG3=time_to_eat"
+	@echo "ARG4=time_to_sleep"
+	@echo "[ARG5=number_of_times_each_philosopher_must_eat]$(RESET)"
+	@echo "$(GREEN)Running $(NAME)...$(RESET)"
+	@./$(NAME) $(ARGS)
 
 clean:
 	@echo "$(RED)Deleting objects...$(RESET)"

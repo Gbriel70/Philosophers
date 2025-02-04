@@ -74,24 +74,14 @@ static void *philosopher_routine(void *arg)
 static void *monitor_philos_state(void *arg)
 {
     t_data *data;
-    int i;
-    int current_time_ms;
 
     data = (t_data *)arg;
     while(!data->sim_state.end_sim)
     {
-        i = -1;
-        while(++i < data->config.nbr_philo && !data->sim_state.end_sim)
+        if (simulation_should_stop(data))
         {
-            current_time_ms = calc_elapsed_ms(data->sim_state.start_time);
-            if ((current_time_ms - data->philos[i].time_last_ate) > data->config.time_to_die)
-            {
-                data->sim_state.end_sim = TRUE;
-                pthread_mutex_lock(&data->mutex.print_mtx);
-                printf("%d %d %s%s\n", current_time_ms, data->philos[i].id, RED, DIE_MSG);
-                pthread_mutex_unlock(&data->mutex.print_mtx);
-                break;
-            }
+            data->sim_state.end_sim = TRUE;
+            break ;
         }
         usleep(1000);
     }
