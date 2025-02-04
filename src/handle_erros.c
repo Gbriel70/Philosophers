@@ -23,3 +23,15 @@ void destroy_mutexes(t_mutex *mutex, int nbr_philo, int stage)
         pthread_mutex_destroy(&mutex->fork_mtx[i]);
     free(mutex->fork_mtx);
 }
+
+short stop_simulation(t_philo *philo, int stop)
+{
+    short status;
+
+    pthread_mutex_lock(&philo->data->mutex.sim_status_mtx);
+    if (stop)
+        philo->data->sim_state.end_sim = TRUE;
+    status = philo->data->sim_state.end_sim;
+    pthread_mutex_unlock(&philo->data->mutex.sim_status_mtx);
+    return (status);
+}

@@ -10,22 +10,22 @@ t_data *init(int ac, char **av)
 
 	data = malloc(sizeof(t_data));
 	if (!data)
-		return (print_error("Falha ao alocar t_data"));
+		return (print_error("Falha ao alocar t_data"), NULL);
 	if (init_config(&data->config, ac, av) != 0)
 	{
 		free(data);
-		return (print_error("Falha ao inicializar config"));
+		return (print_error("Falha ao inicializar config"), NULL);
 	}
 	if (init_mutexes(&data->mutex, data->config.nbr_philo) != 0)
 	{
 		free(data);
-		return (print_error("Falha ao inicializar mutexes"));
+		return (print_error("Falha ao inicializar mutexes"), NULL);
 	}
 	if (init_sim_state(&data->sim_state) != 0)
 	{
 		destroy_mutexes(&data->mutex, data->config.nbr_philo, 0);
 		free(data);
-		return (print_error("Falha ao inicializar sim_state"));
+		return (print_error("Falha ao inicializar sim_state"), NULL);
 	}
 	return (data);
 }

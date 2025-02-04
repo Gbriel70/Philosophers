@@ -20,11 +20,11 @@
 # define RESET "\033[0m"
 
 // MESSAGES
-# define TAKE_FORK_MSG "has taken a fork"
-# define EAT_MSG "is eating"
-# define SLEEP_MSG "is sleeping"
-# define THINK_MSG "is thinking"
-# define DIE_MSG "died"
+# define TAKE_FORK_MSG "has taken a fork 🍽️"
+# define EAT_MSG "is eating 🍳"
+# define SLEEP_MSG "is sleeping 😪"
+# define THINK_MSG "is thinking 🤔"
+# define DIE_MSG "died ☠️:"
 
 typedef enum e_action
 {
@@ -59,6 +59,8 @@ typedef struct s_sim_state
 	short end_sim;
 }				t_sim_state;
 
+typedef struct s_philo t_philo;
+
 typedef struct s_data
 {
 	t_config config;
@@ -90,6 +92,18 @@ t_data *init(int ac, char **av);
 
 // SIMULATION
 void simulate(t_data *data);
+int print_action(t_philo *philo, t_philo_action action);
+
+// MONITOR
+short philo_starved(t_philo *philo);
+short all_philos_full(t_philo *philo);
+
+// ROUTINE
+void *eating(t_philo *philo);
+void take_forks(t_philo *philo);
+void set_philo_full(t_philo *philo);
+void *sleeping(t_philo *philo);
+void *thinking(t_philo *philo);
 
 // TIME
 int get_current_time_ms(void);
@@ -99,6 +113,7 @@ void ft_usleep(int usec_sleep_time);
 
 // HANDLE ERRORS
 void destroy_mutexes(t_mutex *mutex, int nbr_philo, int stage);
+short stop_simulation(t_philo *philo, int stop);
 
 
 #endif
