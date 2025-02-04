@@ -1,73 +1,69 @@
 #include "../includes/philo.h"
 
-int init_data(int ac, char **av, t_data *data)
-{
-	int	stage;
+static int init_config(t_config *config, int ac, char **av);
+static int init_mutexes(t_mutex *mutex, int nbr_philo);
+static int init_sim_state(t_sim_state *sim_state);
 
-	data->nbr_philo = ft_atoi(av[1]);
-	data->time_to_die = ft_atoi(av[2]);
-	data->time_to_eat = ft_atoi(av[3]);
-	data->time_to_sleep = ft_atoi(av[4]);
+void init(int ac, char **av)
+{
+	t_data *data;
+
+	data = malloc(sizeof(t_data));
+	if (!data)
+		return (print_error("Falha ao alocar t_data"));
+	if (init_config(&data->config, ac, av) != 0)
+		return (print_error("Falha ao inicializar config"));
+	if (init_mutexes(&data->mutex, data->config.nbr_philo) != 0)
+		return (print_error("Falha ao inicializar mutexes"));
+	if (init_sim_state(&data->sim_state) != 0)
+		return (print_error("Falha ao inicializar sim_state"));
+}
+
+static int init_config(t_config *config, int ac, char **av)
+{
+	config->nbr_philo = ft_atoi(av[1]);
+	config->time_to_die = ft_atoi(av[2]);
+	config->time_to_eat = ft_atoi(av[3]);
+	config->time_to_sleep = ft_atoi(av[4]);
 	if (ac == 6)
-		data->max_meals = ft_atoi(av[5]);
+		config->nbr_must_eat = ft_atoi(av[5]);
 	else
-		data->max_meals = -1;
-	data->forks = (pthread_mutex_t *)malloc(data->nbr_philo * sizeof(pthread_mutex_t));
-	if (!data->forks)
-		return (print_error("Error: malloc failed"), 1);
-	if (pthread_mutex_init(data->print_mutex, NULL) != 0)
-		return (print_error("Error: mutex init failed"), 1);
-	stage = init_mutexes(data);
-	if (stage != 0)
-	{
-		if (stage >= 1)
-			destroy_mutexes(data);
-		return (1);
-	}
+		config->nbr_must_eat = -1;
 	return (0);
 }
 
-void init_philo_data(t_philo *philos, t_data *data)
+static int init_mutexes(t_mutex *mutex, int nbr_philo)
 {
 	int i;
 
-	i = 0;
-	while (i < data->nbr_philo)
+	mutex->fork_mtx = malloc(sizeof(pthread_mutex_t) * nbr_philo);
+	if (!mutex->fork_mtx)
+		return (print_error("Falha ao alocar mutex dos forks"));
+	i = -1;
+	while(++i < nbr_philo)
 	{
-		philos[i].id = i + 1;
-		philos[i].meals_eaten = 0;
-		philos[i].last_meal = 0;
-		philos[i].right_fork = &data->forks[i];
-		philos[i].left_fork = &data->forks[(i + 1) % data->nbr_philo];
-		philos[i].data = data;
-		i++;
-	}
-}
-
-int init_mutexes(t_data *data)
-{
-	int i;
-
-	i = 0;
-	while (i < data->nbr_philo)
-	{
-		if (pthread_mutex_init(&data->forks[i], NULL) != 0)
+		if (pthread_mutex_init(&mutex->fork_mtx[i], NULL) != 0)
 		{
 			while (--i >= 0)
-				pthread_mutex_destroy(&data->forks[i]);
-			return (print_error("Error: mutex init failed"), 1);
+				pthread_mutex_destroy(&mutex->fork_mtx[i]);
+			return (print_error("Falha ao inicializar mutex do fork"));
 		}
-		i++;
 	}
+	if (pthread_mutex_init(&mutex->print_mtx, NULL) != 0)
+		destroy_mutexes(mutex, nbr_philo, 1);
+	if (pthread_mutex_init(&mutex->time_ate_mtx, NULL) != 0)
+		destroy_mutexes(mutex, nbr_philo, 2);
+	if (pthread_mutex_init(&mutex->philos_full_mtx, NULL) != 0)
+		destroy_mutexes(mutex, nbr_philo, 3);
+	if (pthread_mutex_init(&mutex->sim_status_mtx, NULL) != 0)
+		destroy_mutexes(mutex, nbr_philo, 4);
 	return (0);
 }
 
-void destroy_mutexes(t_data *data)
+static int init_sim_state(t_sim_state *sim_state)
 {
-	int i;
 
-	i = 0;
-	while (i < data->nbr_philo)
-		pthread_mutex_destroy(&data->forks[i++]);
-	pthread_mutex_destroy(data->print_mutex);
+	sim_state->start_time = get_current_time_ms();
+	sim_state->end_sim = FALSE;
+	return (0);
 }
