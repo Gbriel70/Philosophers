@@ -4,7 +4,7 @@ static int init_config(t_config *config, int ac, char **av);
 static int init_mutexes(t_mutex *mutex, int nbr_philo);
 static int init_sim_state(t_sim_state *sim_state);
 
-void init(int ac, char **av)
+t_data *init(int ac, char **av)
 {
 	t_data *data;
 
@@ -12,11 +12,22 @@ void init(int ac, char **av)
 	if (!data)
 		return (print_error("Falha ao alocar t_data"));
 	if (init_config(&data->config, ac, av) != 0)
+	{
+		free(data);
 		return (print_error("Falha ao inicializar config"));
+	}
 	if (init_mutexes(&data->mutex, data->config.nbr_philo) != 0)
+	{
+		free(data);
 		return (print_error("Falha ao inicializar mutexes"));
+	}
 	if (init_sim_state(&data->sim_state) != 0)
+	{
+		destroy_mutexes(&data->mutex, data->config.nbr_philo, 0);
+		free(data);
 		return (print_error("Falha ao inicializar sim_state"));
+	}
+	return (data);
 }
 
 static int init_config(t_config *config, int ac, char **av)

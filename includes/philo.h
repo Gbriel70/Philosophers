@@ -10,6 +10,22 @@
 # define TRUE 1
 # define FALSE 0
 
+// COLORS
+# define RED "\033[0;31m"
+# define GREEN "\033[0;32m"
+# define YELLOW "\033[0;33m"
+# define BLUE "\033[0;34m"
+# define MAGENTA "\033[0;35m"
+# define CYAN "\033[0;36m"
+# define RESET "\033[0m"
+
+// MESSAGES
+# define TAKE_FORK_MSG "has taken a fork"
+# define EAT_MSG "is eating"
+# define SLEEP_MSG "is sleeping"
+# define THINK_MSG "is thinking"
+# define DIE_MSG "died"
+
 typedef enum e_action
 {
 	TAKE_FORK,
@@ -48,6 +64,7 @@ typedef struct s_data
 	t_config config;
 	t_mutex mutex;
 	t_sim_state sim_state;
+	t_philo *philos;
 }			t_data;
 
 typedef struct s_philo
@@ -58,6 +75,7 @@ typedef struct s_philo
 	short full;
 	pthread_mutex_t *right_fork;
 	pthread_mutex_t *left_fork;
+	pthread_t philo_pthread;
 	t_data *data;
 }			t_philo;
 
@@ -68,10 +86,16 @@ short valid_arguments(int ac, char **av);
 int ft_atoi(char *str);
 
 // INIT
-void init(int ac, char **av);
+t_data *init(int ac, char **av);
+
+// SIMULATION
+void simulate(t_data *data);
 
 // TIME
 int get_current_time_ms(void);
+int calc_elapsed_ms(int start_time_ms);
+int calc_elapsed_usec(int start_time_ms);
+void ft_usleep(int usec_sleep_time);
 
 // HANDLE ERRORS
 void destroy_mutexes(t_mutex *mutex, int nbr_philo, int stage);
