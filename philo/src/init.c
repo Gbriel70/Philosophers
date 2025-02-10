@@ -1,36 +1,48 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/10 11:33:53 by gcosta-m          #+#    #+#             */
+/*   Updated: 2025/02/10 11:37:17 by gcosta-m         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/philo.h"
 
-static int init_config(t_config *config, int ac, char **av);
-static int init_mutexes(t_mutex *mutex, int nbr_philo);
-static int init_sim_state(t_sim_state *sim_state);
+static int	init_config(t_config *config, int ac, char **av);
+static int	init_mutexes(t_mutex *mutex, int nbr_philo);
+static int	init_sim_state(t_sim_state *sim_state);
 
-t_data *init(int ac, char **av)
+t_data	*init(int ac, char **av)
 {
-	t_data *data;
+	t_data	*data;
 
 	data = malloc(sizeof(t_data));
 	if (!data)
-		return (print_error("Falha ao alocar t_data"), NULL);
+		return (print_error("Error to aloc t_data"), NULL);
 	if (init_config(&data->config, ac, av) != 0)
 	{
 		free(data);
-		return (print_error("Falha ao inicializar config"), NULL);
+		return (print_error("Error to init config"), NULL);
 	}
 	if (init_mutexes(&data->mutex, data->config.nbr_philo) != 0)
 	{
 		free(data);
-		return (print_error("Falha ao inicializar mutexes"), NULL);
+		return (print_error("Error to init mutexes"), NULL);
 	}
 	if (init_sim_state(&data->sim_state) != 0)
 	{
 		destroy_mutexes(&data->mutex, data->config.nbr_philo, 0);
 		free(data);
-		return (print_error("Falha ao inicializar sim_state"), NULL);
+		return (print_error("Error to init sim_state"), NULL);
 	}
 	return (data);
 }
 
-static int init_config(t_config *config, int ac, char **av)
+static int	init_config(t_config *config, int ac, char **av)
 {
 	config->nbr_philo = ft_atoi(av[1]);
 	config->time_to_die = ft_atoi(av[2]);
@@ -43,21 +55,21 @@ static int init_config(t_config *config, int ac, char **av)
 	return (0);
 }
 
-static int init_mutexes(t_mutex *mutex, int nbr_philo)
+static int	init_mutexes(t_mutex *mutex, int nbr_philo)
 {
-	int i;
+	int	i;
 
 	mutex->fork_mtx = malloc(sizeof(pthread_mutex_t) * nbr_philo);
 	if (!mutex->fork_mtx)
-		return (print_error("Falha ao alocar mutex dos forks"));
+		return (print_error("Error to allocate mutex of forks"));
 	i = -1;
-	while(++i < nbr_philo)
+	while (++i < nbr_philo)
 	{
 		if (pthread_mutex_init(&mutex->fork_mtx[i], NULL) != 0)
 		{
 			while (--i >= 0)
 				pthread_mutex_destroy(&mutex->fork_mtx[i]);
-			return (print_error("Falha ao inicializar mutex do fork"));
+			return (print_error("Error to init mutex of forks"));
 		}
 	}
 	if (pthread_mutex_init(&mutex->print_mtx, NULL) != 0)
@@ -71,9 +83,8 @@ static int init_mutexes(t_mutex *mutex, int nbr_philo)
 	return (0);
 }
 
-static int init_sim_state(t_sim_state *sim_state)
+static int	init_sim_state(t_sim_state *sim_state)
 {
-
 	sim_state->start_time = get_current_time_ms();
 	sim_state->end_sim = FALSE;
 	return (0);
