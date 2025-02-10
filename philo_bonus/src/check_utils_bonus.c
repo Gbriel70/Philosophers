@@ -1,14 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   check_utils_bonus.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/10 17:10:43 by gcosta-m          #+#    #+#             */
+/*   Updated: 2025/02/10 17:10:49 by gcosta-m         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/philo_bonus.h"
 
-int ft_atoi(char *str)
+int	ft_atoi(char *str)
 {
-	int sign;
-	int num;
+	int	sign;
+	int	num;
 
 	sign = 1;
 	num = 0;
-	while (*str == ' ' || *str == '\t' || *str == '\n'
-		|| *str == '\v' || *str == '\f' || *str == '\r')
+	while (*str == ' ' || *str == '\t' || *str == '\n' || *str == '\v'
+		|| *str == '\f' || *str == '\r')
 		str++;
 	if (*str == '-')
 		sign = -1;
@@ -24,9 +36,9 @@ int ft_atoi(char *str)
 	return (sign * num);
 }
 
-short valid_arguments(int ac, char **av)
+short	valid_arguments(int ac, char **av)
 {
-	int i;
+	int	i;
 
 	if (ac < 5 || ac > 6)
 	{
@@ -46,7 +58,7 @@ short valid_arguments(int ac, char **av)
 	return (TRUE);
 }
 
-int print_error(char *message)
+int	print_error(char *message)
 {
 	fprintf(stderr, "\033[31m%s\033[0m\n", message);
 	exit(EXIT_FAILURE);

@@ -106,4 +106,12 @@ int calc_elapsed_ms(int start_time_ms);
 int calc_elapsed_usec(int start_time_ms);
 void ft_usleep(int usec_sleep_time);
 
+// UTILS
+char *ft_utoa(int i);
+char *ft_strjoin(char *str, char *str2);
+
+// FINISH
+void close_shared_semaphores(t_data *data);
+void unlink_shared_semaphores(void);
+
 #endif
