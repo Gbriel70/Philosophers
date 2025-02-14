@@ -113,17 +113,17 @@ int	print_action(t_philo *philo, t_philo_action action)
 	if (!stop_simulation(philo, 0))
 	{
 		if (action == TAKE_FORK)
-			printf("%d %d %s%s\n", time_action_ms, philo->id, GREEN,
-				TAKE_FORK_MSG);
+			printf("%d %d %s%s%s\n", time_action_ms, philo->id, GREEN,
+				TAKE_FORK_MSG, RESET);
 		else if (action == EAT)
-			printf("%d %d %s%s\n", time_action_ms, philo->id, YELLOW, EAT_MSG);
+			printf("%d %d %s%s%s\n", time_action_ms, philo->id, YELLOW, EAT_MSG, RESET);
 		else if (action == SLEEP)
-			printf("%d %d %s%s\n", time_action_ms, philo->id, BLUE, SLEEP_MSG);
+			printf("%d %d %s%s%s\n", time_action_ms, philo->id, BLUE, SLEEP_MSG, RESET);
 		else if (action == THINK)
-			printf("%d %d %s%s\n", time_action_ms, philo->id, MAGENTA,
-				THINK_MSG);
+			printf("%d %d %s%s%s\n", time_action_ms, philo->id, MAGENTA,
+				THINK_MSG, RESET);
 		else if (action == DIE)
-			printf("%d %d %s%s\n", time_action_ms, philo->id, RED, DIE_MSG);
+			printf("%d %d %s%s%s\n", time_action_ms, philo->id, RED, DIE_MSG, RESET);
 	}
 	pthread_mutex_unlock(&philo->data->mutex.print_mtx);
 	return (time_action_ms);
