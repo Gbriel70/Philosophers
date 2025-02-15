@@ -17,8 +17,9 @@ char *ft_utoa(int i)
 	if (!str)
 		return (NULL);
 	str[len--] = '\0';
-	if (nbr == 0)
+	if (i == 0)
 		str[0] = '0';
+	nbr = i;
 	while (nbr > 0)
 	{
 		str[len--] = (nbr % 10) + '0';
@@ -27,12 +28,14 @@ char *ft_utoa(int i)
 	return (str);
 }
 
-char ft_strjoin(char *str, char *str2)
+char *ft_strjoin(char *str, char *str2)
 {
 	char *new_str;
 	int i;
 	int j;
 
+	if (!str || !str2)
+		return (NULL);
 	new_str = malloc(sizeof(char) * (strlen(str) + strlen(str2) + 1));
 	if (!new_str)
 		return (NULL);
@@ -53,9 +56,13 @@ pid_t ft_fork(t_data *data)
 	pid = fork();
 	if (pid < 0)
 	{
-		close_shared_semaphores(data->semaphores);
+		close_shared_semaphores(data);
 		unlink_shared_semaphores();
 		free(data->philo_pid);
+		free(data->config);
+		free(data->monitor);
+		free(data->semaphores);
+		free(data);
 		exit(EXIT_FAILURE);
 	}
 	return (pid);

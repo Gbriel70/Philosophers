@@ -37,7 +37,7 @@ $(NAME): $(OBJ) $(INC)
 
 #=================================LEAK========================================#
 
-ARGS=" "
+ARGS=2 400 200 200
 
 leak:
 	@echo "ARG1=number_of_philosophers"
@@ -56,7 +56,7 @@ norm:
 
 #=================================GDB=========================================#
 
-gdb:
+gdb: all
 	@echo "$(YELLOW)ARG1=number_of_philosophers"
 	@echo "ARG2=time_to_die"
 	@echo "ARG3=time_to_eat"

@@ -95,10 +95,11 @@ short valid_arguments(int ac, char **av);
 int print_error(char *message);
 
 // INIT
-t_data *init(int ac, char **av);
+void init(int ac, char **av, t_data *data);
 
 // HANDLE_ERRORS
 void error_exit(char *message, t_data *data, int stage);
+void	free_data(t_data *data, int stage);
 
 // TIME_UTILS
 int get_current_time_ms(void);
@@ -106,12 +107,27 @@ int calc_elapsed_ms(int start_time_ms);
 int calc_elapsed_usec(int start_time_ms);
 void ft_usleep(int usec_sleep_time);
 
+// PHILO_ROUTINE
+void philo_routine(t_data *data, int i);
+
+// PHILO_ACTIONS
+void eating(t_philo *philo);
+void sleeping(t_philo *philo);
+void thinking(t_philo *philo);
+int print_action(t_philo *philo, t_philo_action action);
+
 // UTILS
 char *ft_utoa(int i);
 char *ft_strjoin(char *str, char *str2);
+pid_t ft_fork(t_data *data);
 
 // FINISH
 void close_shared_semaphores(t_data *data);
 void unlink_shared_semaphores(void);
+void kill_all_philos(t_data *data);
+void wait_finish_philos(t_data *data);
+short simulation_stopped(t_data *data, int stop);
+
+void cleanup(t_data *data);
 
 #endif

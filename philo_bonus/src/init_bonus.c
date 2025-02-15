@@ -20,30 +20,26 @@ short			unlink_semaphores(void);
 short			set_unlinked_semaphores(t_semaphores *semaphores,
 					int nbr_philos);
 
-t_data	*init(int ac, char **av)
+void init(int ac, char **av, t_data *data)
 {
-	t_data	*data;
-
-	data = malloc(sizeof(t_data));
-	if (!data)
-		print_error("Error: malloc failed");
-	data->config = malloc(sizeof(t_config));
-	if (!data->config)
-		error_exit("Error: malloc config failed", data, 1);
-	else if (init_config(data->config, ac, av) != TRUE)
-		error_exit("Error: init_config failed", data, 2);
-	data->monitor = malloc(sizeof(t_monitor));
-	if (!data->monitor)
-		error_exit("Error: malloc monitor failed", data, 2);
-	else if (init_monitor(data->monitor) != TRUE)
-		error_exit("Error: init_monitor failed", data, 3);
-	data->semaphores = malloc(sizeof(t_semaphores));
-	if (!data->semaphores)
-		error_exit("Error: malloc failed", data, 3);
-	else if (init_semaphores(data->semaphores,
-			data->config->nbr_philos) != TRUE)
-		error_exit("Error: init_semaphores failed", data, 4);
-	return (data);
+    data->config = malloc(sizeof(t_config));
+    if (!data->config)
+        error_exit("Error: malloc config failed", data, 1);
+    else if (init_config(data->config, ac, av) != TRUE)
+        error_exit("Error: init_config failed", data, 2);
+    data->philo_pid = malloc(sizeof(pid_t) * data->config->nbr_philos);
+    if (!data->philo_pid)
+        error_exit("Error: malloc failed", data, 4);
+    data->semaphores = malloc(sizeof(t_semaphores));
+    if (!data->semaphores)
+        error_exit("Error: malloc failed", data, 3);
+    else if (init_semaphores(data->semaphores, data->config->nbr_philos) != TRUE)
+        error_exit("Error: init_semaphores failed", data, 4);
+    data->monitor = malloc(sizeof(t_monitor));
+    if (!data->monitor)
+        error_exit("Error: malloc monitor failed", data, 2);
+    else if (init_monitor(data->monitor) != TRUE)
+        error_exit("Error: init_monitor failed", data, 3);
 }
 
 static short	init_config(t_config *config, int ac, char **av)
@@ -83,23 +79,28 @@ short	unlink_semaphores(void)
 	sem_unlink("/death");
 	sem_unlink("/full");
 	sem_unlink("/stop");
-	sem_unlink("/sem_state");
 	return (TRUE);
 }
 
 short	set_unlinked_semaphores(t_semaphores *semaphores, int nbr_philos)
 {
-	semaphores->forks = sem_open("/forks", O_CREAT, 0660, nbr_philos);
-	semaphores->table = sem_open("/table", O_CREAT, 0660, 1);
-	semaphores->print = sem_open("/print", O_CREAT, 0660, 1);
-	semaphores->death = sem_open("/death", O_CREAT, 0660, 1);
-	semaphores->full = sem_open("/full", O_CREAT, 0660, 0);
-	semaphores->stop = sem_open("/stop", O_CREAT, 0660, 1);
-	semaphores->sem_state = sem_open("/sem_state", O_CREAT, 0660, 1);
-	if (semaphores->forks == SEM_FAILED || semaphores->table == SEM_FAILED
-		|| semaphores->print == SEM_FAILED || semaphores->death == SEM_FAILED
-		|| semaphores->full == SEM_FAILED || semaphores->stop == SEM_FAILED
-		|| semaphores->sem_state == SEM_FAILED)
-		return (FALSE);
-	return (TRUE);
+    semaphores->forks = sem_open("/forks", O_CREAT, 0660, nbr_philos);
+    if (semaphores->forks == SEM_FAILED)
+        return (FALSE);
+    semaphores->table = sem_open("/table", O_CREAT, 0660, nbr_philos - 1);
+    if (semaphores->table == SEM_FAILED)
+        return (FALSE);
+    semaphores->print = sem_open("/print", O_CREAT, 0660, 1);
+    if (semaphores->print == SEM_FAILED)
+        return (FALSE);
+    semaphores->death = sem_open("/death", O_CREAT, 0660, 0);
+    if (semaphores->death == SEM_FAILED)
+        return (FALSE);
+    semaphores->full = sem_open("/full", O_CREAT, 0660, 0);
+    if (semaphores->full == SEM_FAILED)
+        return (FALSE);
+    semaphores->stop = sem_open("/stop", O_CREAT, 0660, 1);
+    if (semaphores->stop == SEM_FAILED)
+        return (FALSE);
+    return (TRUE);
 }

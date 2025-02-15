@@ -12,7 +12,6 @@
 
 #include "../includes/philo_bonus.h"
 
-static void	free_data(t_data *data, int stage);
 static void	free_semaphores(t_semaphores *semaphores);
 
 void	error_exit(char *message, t_data *data, int stage)
@@ -22,26 +21,28 @@ void	error_exit(char *message, t_data *data, int stage)
 	exit(EXIT_FAILURE);
 }
 
-static void	free_data(t_data *data, int stage)
+void free_data(t_data *data, int stage)
 {
-	if (!data)
-		return ;
-	if (stage >= 2)
-	{
-		if (data->config)
-			free(data->config);
-		if (stage >= 3)
-		{
-			if (data->monitor)
-				free(data->monitor);
-			if (stage >= 4)
-			{
-				if (data->semaphores)
-					free_semaphores(data->semaphores);
-			}
-		}
-	}
-	free(data);
+    if (!data)
+        return;
+    if (stage >= 4)
+    {
+        if (data->semaphores)
+            free_semaphores(data->semaphores);
+        if (data->philo_pid)
+            free(data->philo_pid);
+    }
+    if (stage >= 3)
+    {
+        if (data->monitor)
+            free(data->monitor);
+    }
+    if (stage >= 2)
+    {
+        if (data->config)
+            free(data->config);
+    }
+    free(data);
 }
 
 static void	free_semaphores(t_semaphores *semaphores)
@@ -62,5 +63,6 @@ static void	free_semaphores(t_semaphores *semaphores)
 		sem_close(semaphores->stop);
 	if (semaphores->sem_state)
 		sem_close(semaphores->sem_state);
+	unlink_shared_semaphores();
 	free(semaphores);
 }
