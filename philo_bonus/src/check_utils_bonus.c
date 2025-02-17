@@ -6,7 +6,7 @@
 /*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 17:10:43 by gcosta-m          #+#    #+#             */
-/*   Updated: 2025/02/10 17:10:49 by gcosta-m         ###   ########.fr       */
+/*   Updated: 2025/02/17 10:44:23 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ short	valid_arguments(int ac, char **av)
 
 	if (ac < 5 || ac > 6)
 	{
-		print_error("Usage: ./philo num_of_philosophers time_to_die time_to_eat time_to_sleep [times_each_must_eat]");
+		print_error("Usage: ./philo num_of_philosophers \
+		time_to_die time_to_eat time_to_sleep [times_each_must_eat]");
 		return (FALSE);
 	}
 	i = 1;
@@ -50,7 +51,8 @@ short	valid_arguments(int ac, char **av)
 	{
 		if (ft_atoi(av[i]) <= 0 || ft_atoi(av[i]) > __INT_MAX__)
 		{
-			print_error("Error: argv[i] must be a positive integer or less than INT_MAX");
+			print_error("Error: argv[i] must be a \
+			positive integer or less than INT_MAX");
 			return (FALSE);
 		}
 		i++;
@@ -62,4 +64,15 @@ int	print_error(char *message)
 {
 	fprintf(stderr, "\033[31m%s\033[0m\n", message);
 	exit(EXIT_FAILURE);
+}
+
+void	kill_all_philos(t_data *data)
+{
+	int	i;
+
+	i = -1;
+	while (++i < data->config->nbr_philos)
+	{
+		kill(data->philo_pid[i], SIGKILL);
+	}
 }

@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/17 10:36:51 by gcosta-m          #+#    #+#             */
+/*   Updated: 2025/02/17 10:45:21 by gcosta-m         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/philo_bonus.h"
 
-char *ft_utoa(int i)
+char	*ft_utoa(int i)
 {
-	int len;
-	char *str;
-	long nbr;
+	int		len;
+	char	*str;
+	long	nbr;
 
 	nbr = i;
 	len = 0;
@@ -28,11 +40,11 @@ char *ft_utoa(int i)
 	return (str);
 }
 
-char *ft_strjoin(char *str, char *str2)
+char	*ft_strjoin(char *str, char *str2)
 {
-	char *new_str;
-	int i;
-	int j;
+	char	*new_str;
+	int		i;
+	int		j;
 
 	if (!str || !str2)
 		return (NULL);
@@ -49,15 +61,15 @@ char *ft_strjoin(char *str, char *str2)
 	return (new_str);
 }
 
-pid_t ft_fork(t_data *data)
+pid_t	ft_fork(t_data *data)
 {
-	pid_t pid;
+	pid_t	pid;
 
 	pid = fork();
 	if (pid < 0)
 	{
 		close_shared_semaphores(data);
-		unlink_shared_semaphores();
+		unlink_semaphores();
 		free(data->philo_pid);
 		free(data->config);
 		free(data->monitor);

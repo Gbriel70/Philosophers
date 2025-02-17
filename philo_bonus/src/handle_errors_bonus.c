@@ -6,7 +6,7 @@
 /*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 17:10:33 by gcosta-m          #+#    #+#             */
-/*   Updated: 2025/02/10 17:10:36 by gcosta-m         ###   ########.fr       */
+/*   Updated: 2025/02/17 10:45:04 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,28 +21,28 @@ void	error_exit(char *message, t_data *data, int stage)
 	exit(EXIT_FAILURE);
 }
 
-void free_data(t_data *data, int stage)
+void	free_data(t_data *data, int stage)
 {
-    if (!data)
-        return;
-    if (stage >= 4)
-    {
-        if (data->semaphores)
-            free_semaphores(data->semaphores);
-        if (data->philo_pid)
-            free(data->philo_pid);
-    }
-    if (stage >= 3)
-    {
-        if (data->monitor)
-            free(data->monitor);
-    }
-    if (stage >= 2)
-    {
-        if (data->config)
-            free(data->config);
-    }
-    free(data);
+	if (!data)
+		return ;
+	if (stage >= 4)
+	{
+		if (data->semaphores)
+			free_semaphores(data->semaphores);
+		if (data->philo_pid)
+			free(data->philo_pid);
+	}
+	if (stage >= 3)
+	{
+		if (data->monitor)
+			free(data->monitor);
+	}
+	if (stage >= 2)
+	{
+		if (data->config)
+			free(data->config);
+	}
+	free(data);
 }
 
 static void	free_semaphores(t_semaphores *semaphores)
@@ -63,6 +63,6 @@ static void	free_semaphores(t_semaphores *semaphores)
 		sem_close(semaphores->stop);
 	if (semaphores->sem_state)
 		sem_close(semaphores->sem_state);
-	unlink_shared_semaphores();
+	unlink_semaphores();
 	free(semaphores);
 }

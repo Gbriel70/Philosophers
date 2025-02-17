@@ -6,7 +6,7 @@
 /*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 17:10:20 by gcosta-m          #+#    #+#             */
-/*   Updated: 2025/02/10 17:10:24 by gcosta-m         ###   ########.fr       */
+/*   Updated: 2025/02/17 10:44:04 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ int	calc_elapsed_usec(int start_time_ms)
 
 void	ft_usleep(int usec_sleep_time)
 {
-	int start_time_ms;
-	int usec_left;
+	int	start_time_ms;
+	int	usec_left;
 
 	start_time_ms = get_current_time_ms();
 	while ((calc_elapsed_usec(start_time_ms) < usec_sleep_time))
