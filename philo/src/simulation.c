@@ -6,7 +6,7 @@
 /*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 11:34:18 by gcosta-m          #+#    #+#             */
-/*   Updated: 2025/02/10 11:41:50 by gcosta-m         ###   ########.fr       */
+/*   Updated: 2025/02/17 10:33:47 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,16 +114,18 @@ int	print_action(t_philo *philo, t_philo_action action)
 	{
 		if (action == TAKE_FORK)
 			printf("%d %d %s%s%s\n", time_action_ms, philo->id, GREEN,
-				TAKE_FORK_MSG, RESET);
+				TAKE_FORK_MSG, R);
 		else if (action == EAT)
-			printf("%d %d %s%s%s\n", time_action_ms, philo->id, YELLOW, EAT_MSG, RESET);
+			printf("%d %d %s%s%s\n", time_action_ms, \
+			philo->id, YELLOW, EAT_MSG, R);
 		else if (action == SLEEP)
-			printf("%d %d %s%s%s\n", time_action_ms, philo->id, BLUE, SLEEP_MSG, RESET);
+			printf("%d %d %s%s%s\n", time_action_ms, \
+			philo->id, BLUE, SLEEP_MSG, R);
 		else if (action == THINK)
 			printf("%d %d %s%s%s\n", time_action_ms, philo->id, MAGENTA,
-				THINK_MSG, RESET);
+				THINK_MSG, R);
 		else if (action == DIE)
-			printf("%d %d %s%s%s\n", time_action_ms, philo->id, RED, DIE_MSG, RESET);
+			printf("%d %d %s%s%s\n", time_action_ms, philo->id, RED, DIE_MSG, R);
 	}
 	pthread_mutex_unlock(&philo->data->mutex.print_mtx);
 	return (time_action_ms);

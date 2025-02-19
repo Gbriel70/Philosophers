@@ -6,7 +6,7 @@
 /*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 11:43:06 by gcosta-m          #+#    #+#             */
-/*   Updated: 2025/02/10 11:43:09 by gcosta-m         ###   ########.fr       */
+/*   Updated: 2025/02/17 10:33:31 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 # define BLUE "\033[0;34m"
 # define MAGENTA "\033[0;35m"
 # define CYAN "\033[0;36m"
-# define RESET "\033[0m"
+# define R "\033[0m"
 
 // MESSAGES
 # define TAKE_FORK_MSG "has taken a fork 🍽️"
