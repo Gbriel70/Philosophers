@@ -50,24 +50,28 @@ short	stop_simulation(t_philo *philo, int stop)
 
 short	simulation_should_stop(t_data *data)
 {
-	int	i;
-	int	current_time_ms;
+    int	i;
+    int	current_time_ms;
+    int	time_last_ate;
 
-	i = -1;
-	current_time_ms = calc_elapsed_ms(data->sim_state.start_time);
-	while (++i < data->config.nbr_philo)
-	{
-		if ((current_time_ms
-				- data->philos[i].time_last_ate) > data->config.time_to_die)
-		{
-			pthread_mutex_lock(&data->mutex.print_mtx);
-			printf("%d %d %s%s\n", current_time_ms, data->philos[i].id, RED,
-				DIE_MSG);
-			pthread_mutex_unlock(&data->mutex.print_mtx);
-			return (TRUE);
-		}
-	}
-	if (data->config.nbr_must_eat > 0 && all_philos_full(data->philos))
-		return (TRUE);
-	return (FALSE);
+    i = -1;
+    current_time_ms = calc_elapsed_ms(data->sim_state.start_time);
+    while (++i < data->config.nbr_philo)
+    {
+        pthread_mutex_lock(&data->mutex.time_ate_mtx);
+        time_last_ate = data->philos[i].time_last_ate;
+        pthread_mutex_unlock(&data->mutex.time_ate_mtx);
+        
+        if ((current_time_ms - time_last_ate) > data->config.time_to_die)
+        {
+            pthread_mutex_lock(&data->mutex.print_mtx);
+            printf("%d %d %s%s\n", current_time_ms, data->philos[i].id, RED,
+                DIE_MSG);
+            pthread_mutex_unlock(&data->mutex.print_mtx);
+            return (TRUE);
+        }
+    }
+    if (data->config.nbr_must_eat > 0 && all_philos_full(data->philos))
+        return (TRUE);
+    return (FALSE);
 }

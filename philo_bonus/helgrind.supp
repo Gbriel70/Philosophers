@@ -1,0 +1,6 @@
+{
+   sem_wait_without_post
+   Helgrind:Misc
+   fun:sem_wait*
+   fun:death_routine
+}

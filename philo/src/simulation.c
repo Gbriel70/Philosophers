@@ -89,19 +89,31 @@ static void	*philosopher_routine(void *arg)
 
 static void	*monitor_philos_state(void *arg)
 {
-	t_data	*data;
+    t_data	*data;
+    short	should_stop;
 
-	data = (t_data *)arg;
-	while (!data->sim_state.end_sim)
-	{
-		if (simulation_should_stop(data))
-		{
-			data->sim_state.end_sim = TRUE;
-			break ;
-		}
-		usleep(1000);
-	}
-	return (NULL);
+    data = (t_data *)arg;
+    while (1)
+    {
+        should_stop = simulation_should_stop(data);
+        if (should_stop)
+        {
+            pthread_mutex_lock(&data->mutex.sim_status_mtx);
+            data->sim_state.end_sim = TRUE;
+            pthread_mutex_unlock(&data->mutex.sim_status_mtx);
+            break;
+        }
+        
+        pthread_mutex_lock(&data->mutex.sim_status_mtx);
+        should_stop = data->sim_state.end_sim;
+        pthread_mutex_unlock(&data->mutex.sim_status_mtx);
+        
+        if (should_stop)
+            break;
+            
+        usleep(1000);
+    }
+    return (NULL);
 }
 
 int	print_action(t_philo *philo, t_philo_action action)
