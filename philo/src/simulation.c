@@ -6,7 +6,7 @@
 /*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 11:34:18 by gcosta-m          #+#    #+#             */
-/*   Updated: 2025/02/17 10:33:47 by gcosta-m         ###   ########.fr       */
+/*   Updated: 2025/03/24 09:58:24 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,31 +89,28 @@ static void	*philosopher_routine(void *arg)
 
 static void	*monitor_philos_state(void *arg)
 {
-    t_data	*data;
-    short	should_stop;
+	t_data	*data;
+	short	should_stop;
 
-    data = (t_data *)arg;
-    while (1)
-    {
-        should_stop = simulation_should_stop(data);
-        if (should_stop)
-        {
-            pthread_mutex_lock(&data->mutex.sim_status_mtx);
-            data->sim_state.end_sim = TRUE;
-            pthread_mutex_unlock(&data->mutex.sim_status_mtx);
-            break;
-        }
-        
-        pthread_mutex_lock(&data->mutex.sim_status_mtx);
-        should_stop = data->sim_state.end_sim;
-        pthread_mutex_unlock(&data->mutex.sim_status_mtx);
-        
-        if (should_stop)
-            break;
-            
-        usleep(1000);
-    }
-    return (NULL);
+	data = (t_data *)arg;
+	while (1)
+	{
+		should_stop = simulation_should_stop(data);
+		if (should_stop)
+		{
+			pthread_mutex_lock(&data->mutex.sim_status_mtx);
+			data->sim_state.end_sim = TRUE;
+			pthread_mutex_unlock(&data->mutex.sim_status_mtx);
+			break ;
+		}
+		pthread_mutex_lock(&data->mutex.sim_status_mtx);
+		should_stop = data->sim_state.end_sim;
+		pthread_mutex_unlock(&data->mutex.sim_status_mtx);
+		if (should_stop)
+			break ;
+		usleep(1000);
+	}
+	return (NULL);
 }
 
 int	print_action(t_philo *philo, t_philo_action action)
@@ -128,16 +125,17 @@ int	print_action(t_philo *philo, t_philo_action action)
 			printf("%d %d %s%s%s\n", time_action_ms, philo->id, GREEN,
 				TAKE_FORK_MSG, R);
 		else if (action == EAT)
-			printf("%d %d %s%s%s\n", time_action_ms, \
-			philo->id, YELLOW, EAT_MSG, R);
+			printf("%d %d %s%s%s\n", time_action_ms, philo->id, YELLOW, EAT_MSG,
+				R);
 		else if (action == SLEEP)
-			printf("%d %d %s%s%s\n", time_action_ms, \
-			philo->id, BLUE, SLEEP_MSG, R);
+			printf("%d %d %s%s%s\n", time_action_ms, philo->id, BLUE, SLEEP_MSG,
+				R);
 		else if (action == THINK)
 			printf("%d %d %s%s%s\n", time_action_ms, philo->id, MAGENTA,
 				THINK_MSG, R);
 		else if (action == DIE)
-			printf("%d %d %s%s%s\n", time_action_ms, philo->id, RED, DIE_MSG, R);
+			printf("%d %d %s%s%s\n", time_action_ms, philo->id, RED, DIE_MSG,
+				R);
 	}
 	pthread_mutex_unlock(&philo->data->mutex.print_mtx);
 	return (time_action_ms);
